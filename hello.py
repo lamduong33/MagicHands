@@ -6,3 +6,6 @@ print("Mustafa here")
 def lam_function():
     print("This doesn't do anything")
     print("Oh well")
+
+def mustafa_function():
+    print("This does magic")
