@@ -17,8 +17,9 @@ if gpus:
     print(e)
 
 def DataSet():
-    def __init__(self, t_file_name):
-        self.file_name = t_file_name
+    def __init__(self, t_train_data_dir, t_test_data_dir):
+        self.test_data_dir = t_test_data_dir
+        self.train_data_dir = t_train_data_dir
 
 def main():
     train_data_generator = keras.preprocessing.image.ImageDataGenerator(rotation_range=40,
