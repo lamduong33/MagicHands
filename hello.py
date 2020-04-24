@@ -12,3 +12,6 @@ def lam_function():
 
 def mustafa_function():
     print("This does magic")
+
+def test_function():
+    print("Testing")
