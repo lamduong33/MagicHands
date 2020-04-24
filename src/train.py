@@ -18,6 +18,7 @@ class DataSet:
     """ Class to handle training, validation, and testing data, along with any associated
         data that might be used for evaluation purposes and further classification. """
     def __init__(self, t_train_data_dir, t_test_data_dir):
+        """ Constructor for the image data """
         self.test_data_dir = t_test_data_dir
         self.train_data_dir = t_train_data_dir
         self.train_data_generator = keras.preprocessing.image.ImageDataGenerator(rotation_range=40,
