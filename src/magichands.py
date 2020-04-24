@@ -27,9 +27,15 @@ class DataSet:
         self.test_data_generator = keras.preprocessing.image.ImageDataGenerator(rotation_range=40,
                 width_shift_range=0.2, height_shift_range=0.2, rescale=1./255, shear_range=0.2, 
                 zoom_range=0.2, horizontal_flip=True, fill_mode="nearest")
+        self.training_data = self.train_data_generator.flow_from_directory(self.train_data_dir)
+        self.testing_data = self.test_data_generator.flow_from_directory(self.test_data_dir)
+
+class ConvNet:
+    """ The convolutional neural net model """
+    def __init__(self):
+        """ Construct the layers """
+        print("HELLO WORLD")
 
 def main():
     data = DataSet("data/train", "data_test")
 
-
-main()
