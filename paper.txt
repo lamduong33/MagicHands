@@ -1,0 +1,11 @@
+Supervised Learning approach:
+
+Use a randomized decision forest:
+	Binary classification on each pixel (hand or not hand)
+Train CNN by recognizing joint locations
+Infer joint angles from the image of the hand
+
+Randomized Decision Forest Hand Detection:
+	- Hand or not
+	- Why: RDF is really good with full decision tracking
+	- 25 depth and 4 trees
