@@ -1,0 +1,1 @@
+A simple classifier that will tell you which hand gesture you are producing. Initial plan is to identify which ASL sign an image is presenting. Future implementation includes the usage of detecting other hand gestures.
