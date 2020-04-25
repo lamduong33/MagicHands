@@ -43,5 +43,7 @@ class ConvNet:
 def main():
     data = DataSet("data/train", "data/test")
     cnn = ConvNet(data)
-    cnn.model.fit_generator(cnn.data.trcnn_modelcnn_modelain_data_generator, steps_per_epoch=2000, epochs=50, validation_data=cnn.data.test_data_generator, validation_steps=800)
+    #cnn.model.fit_generator(cnn.data.train_data_generator, steps_per_epoch=2000, epochs=50, validation_data=cnn.data.test_data_generator, validation_steps=800)
     print("Done!")
+
+main()
