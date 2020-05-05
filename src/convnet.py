@@ -49,6 +49,6 @@ class ConvNet:
         self.model.fit_generator(self.data.training_data, epochs=5,
                 validation_data=self.data.testing_data)
     
-    def predict(self):
+    def predict_generator(self):
         self.model.predict_generator(self.data.testing_data, use_multiprocessing=True, verbose=1)
  

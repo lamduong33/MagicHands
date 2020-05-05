@@ -16,10 +16,10 @@ if GPUS:
    
 def main():
     data = dataset.DataSet("data/train", "data/test", t_batch_size=64)
-    cnn = convnet.ConvNet(data)
-    cnn.build()
-    #cnn.generate_previews()
-    cnn.train()
+    data.generate_previews()
+    #cnn = convnet.ConvNet(data)
+    #cnn.build()
+    #cnn.train()
 
     print("Done!")
 
