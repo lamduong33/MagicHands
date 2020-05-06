@@ -1,4 +1,6 @@
 import tensorflow # Keras's backbone
+import keras
+
 import dataset
 import convnet
 
@@ -20,7 +22,11 @@ def main():
     cnn = convnet.ConvNet(data)
     cnn.build()
     cnn.train()
-
+    cnn.predict_generator()
+    """
+    model = keras.models.load_model("magichands_model.h5")
+    print(model)
     print("Done!")
+    """
 
 main()

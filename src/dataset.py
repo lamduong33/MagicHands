@@ -23,8 +23,7 @@ class DataSet:
                 samplewise_std_normalization=True, validation_split=0.1, rotation_range=40,
                 width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2, zoom_range=0.2,
                 horizontal_flip=True, fill_mode="nearest")
-        """
-        
+        """ 
         self.training_data = self.train_data_generator.flow_from_directory(self.train_data_dir,
                 target_size=(self.image_height, self.image_width), batch_size=64, shuffle=True,
                 subset="training")
@@ -32,11 +31,12 @@ class DataSet:
                 target_size=(self.image_height, self.image_width), batch_size=64, subset="validation")
     
     def generate_previews(self):
-        img = keras.preprocessing.image.load_img("data/test/A/A_test.jpg")
-        x = keras.preprocessing.image.img_to_array(img)
-        x = x.reshape((1,) + x.shape)
+        test_image = keras.preprocessing.image.load_img("data/test/A/A_test.jpg")
+        image_set = keras.preprocessing.image.img_to_array(test_image)
+        image_set = image_set.reshape((1,) + image_set.shape)
         i = 0
-        for batch in self.train_data_generator.flow(x, batch_size=1, save_to_dir="preview", save_prefix="A", save_format="jpeg"):
+        for batch in self.train_data_generator.flow(image_set, batch_size=1,
+            save_to_dir="preview", save_prefix="A", save_format="jpeg"):
             i += 1
             if i > 20:
                 break

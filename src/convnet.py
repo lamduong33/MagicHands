@@ -21,6 +21,7 @@ class ConvNet:
     def build(self):
         """ Add final layers, compile, and train the model """
 
+        """
         self.model.add(keras.layers.Conv2D(64, kernel_size=4, strides=2, activation='relu'))
         self.model.add(keras.layers.Dropout(0.5))
         self.model.add(keras.layers.Conv2D(128, kernel_size=4, strides=1, activation='relu'))
@@ -32,6 +33,30 @@ class ConvNet:
         self.model.add(keras.layers.Dropout(0.5))
         self.model.add(keras.layers.Dense(512, activation='relu'))
         self.model.add(keras.layers.Dense(29, activation='softmax'))
+        """
+
+        # ADJUST STRIDES OR PADDING
+        # Original strides = 2, no padding specified
+
+        #self.model.add(keras.layers.Conv2D(32, kernel_size = [3,3], padding = 'same', activation = 'relu'))
+        self.model.add(keras.layers.Conv2D(32, kernel_size = [3,3], padding = 'same', activation = 'relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size = [3,3]))
+    
+        self.model.add(keras.layers.Conv2D(32, kernel_size = [3,3], padding = 'same', activation = 'relu'))
+        self.model.add(keras.layers.Conv2D(64, kernel_size = [3,3], padding = 'same', activation = 'relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size = [3,3]))
+    
+        self.model.add(keras.layers.Conv2D(128, kernel_size = [3,3], padding = 'same', activation = 'relu'))
+        self.model.add(keras.layers.Conv2D(256, kernel_size = [3,3], padding = 'same', activation = 'relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size = [3,3]))
+    
+        self.model.add(keras.layers.BatchNormalization())
+    
+        self.model.add(keras.layers.Flatten())
+        self.model.add(keras.layers.Dropout(0.5))
+        self.model.add(keras.layers.Dense(512, activation = 'relu', kernel_regularizer = keras.regularizers.l2(0.001)))
+        self.model.add(keras.layers.Dense(29, activation = 'softmax'))
+
 
         print("CURRENT MODEL: ")
         print(self.model.summary())
