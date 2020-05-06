@@ -20,13 +20,11 @@ def main():
     data = dataset.DataSet("data/train", "data/test", t_batch_size=64)
     #data.generate_previews()
     cnn = convnet.ConvNet(data)
-    cnn.build()
-    cnn.train()
+    #cnn.build()
+    #cnn.train()
+    #cnn.load_model("magichands_model.h5")
     cnn.predict_generator()
-    """
-    model = keras.models.load_model("magichands_model.h5")
-    print(model)
-    print("Done!")
-    """
+    print(cnn.predictions)
+    exit(0)
 
 main()

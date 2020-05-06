@@ -15,27 +15,30 @@ class DataSet:
         self.test_data_dir = t_test_data_dir
         self.train_data_dir = t_train_data_dir
 
-        # Data generators
-        self.train_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
+        # Data generators, to choose from either non-transformed or transformed data respectively
+        self.regular_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
                 samplewise_std_normalization=True, validation_split=0.1)
-        """
-        self.train_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
+        self.transformed_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
                 samplewise_std_normalization=True, validation_split=0.1, rotation_range=40,
                 width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2, zoom_range=0.2,
                 horizontal_flip=True, fill_mode="nearest")
-        """ 
-        self.training_data = self.train_data_generator.flow_from_directory(self.train_data_dir,
+
+        # Data sets
+        self.training_data = self.regular_data_generator.flow_from_directory(self.train_data_dir,
                 target_size=(self.image_height, self.image_width), batch_size=64, shuffle=True,
-                subset="training")
-        self.testing_data = self.train_data_generator.flow_from_directory(self.test_data_dir,
-                target_size=(self.image_height, self.image_width), batch_size=64, subset="validation")
+                classes=self.classes, class_mode="categorical", color_mode="rgb", seed=42, subset="training")
+        self.validation_data = self.regular_data_generator.flow_from_directory(self.train_data_dir,
+                target_size=(self.image_height, self.image_width), batch_size=64, shuffle=True,
+                classes=self.classes, class_mode="categorical", color_mode="rgb", seed=42, subset="validation")
+        self.testing_data = self.regular_data_generator.flow_from_directory(self.test_data_dir,
+                classes=self.classes, target_size=(self.image_height, self.image_width), batch_size=64)
     
     def generate_previews(self):
         test_image = keras.preprocessing.image.load_img("data/test/A/A_test.jpg")
         image_set = keras.preprocessing.image.img_to_array(test_image)
         image_set = image_set.reshape((1,) + image_set.shape)
         i = 0
-        for batch in self.train_data_generator.flow(image_set, batch_size=1,
+        for batch in self.transformed_data_generator.flow(image_set, batch_size=1,
             save_to_dir="preview", save_prefix="A", save_format="jpeg"):
             i += 1
             if i > 20:
