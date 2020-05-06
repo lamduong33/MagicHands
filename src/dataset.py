@@ -10,22 +10,29 @@ class DataSet:
         self.classes = self.classes + ['K', 'L', 'M', 'N', "nothing", 'O', 'P', 'Q', 'R']
         self.classes = self.classes + ['S', "space", 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-        self.image_height, self.image_width = 200, 200
+        self.image_height, self.image_width = 64, 64
         self.batch_size = t_batch_size
         self.test_data_dir = t_test_data_dir
         self.train_data_dir = t_train_data_dir
 
         # Data generators
         self.train_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
-                samplewise_std_normalization=True,validation_split=0.1)
+                samplewise_std_normalization=True, validation_split=0.1)
+        """
+        self.train_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
+                samplewise_std_normalization=True, validation_split=0.1, rotation_range=40,
+                width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2, zoom_range=0.2,
+                horizontal_flip=True, fill_mode="nearest")
+        """
+        
         self.training_data = self.train_data_generator.flow_from_directory(self.train_data_dir,
-                target_size=(64,64), batch_size=64, shuffle=True,
+                target_size=(self.image_height, self.image_width), batch_size=64, shuffle=True,
                 subset="training")
         self.testing_data = self.train_data_generator.flow_from_directory(self.test_data_dir,
-                target_size=(64,64), batch_size=64, subset="validation")
+                target_size=(self.image_height, self.image_width), batch_size=64, subset="validation")
     
     def generate_previews(self):
-        img = keras.preprocessing.image.load_img("data/train/A/A2062.jpg")
+        img = keras.preprocessing.image.load_img("data/test/A/A_test.jpg")
         x = keras.preprocessing.image.img_to_array(img)
         x = x.reshape((1,) + x.shape)
         i = 0
@@ -33,4 +40,3 @@ class DataSet:
             i += 1
             if i > 20:
                 break
-        
