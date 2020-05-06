@@ -25,21 +25,18 @@ class ConvNet:
         """ Add final layers, compile, and train the model """
 
         # ADJUST STRIDES OR PADDING
-        # Original strides = 2, no padding specified
 
-        self.model.add(keras.layers.Conv2D(32, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
-    
-        self.model.add(keras.layers.Conv2D(32, kernel_size=[3, 3], padding='same', activation='relu'))
         self.model.add(keras.layers.Conv2D(64, kernel_size=[3, 3], padding='same', activation='relu'))
         self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
     
+        self.model.add(keras.layers.Conv2D(64, kernel_size=[3, 3], padding='same', activation='relu'))
         self.model.add(keras.layers.Conv2D(128, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.Conv2D(256, kernel_size=[3, 3], padding='same', activation='relu'))
         self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
     
-        self.model.add(keras.layers.BatchNormalization())
-    
+        self.model.add(keras.layers.Conv2D(256, kernel_size=[3, 3], padding='same', activation='relu'))
+        self.model.add(keras.layers.Conv2D(512, kernel_size=[3, 3], padding='same', activation='relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
+
         self.model.add(keras.layers.Flatten())
         self.model.add(keras.layers.Dropout(0.5))
         self.model.add(keras.layers.Dense(29, activation='softmax'))
@@ -72,13 +69,12 @@ class ConvNet:
     def predict_generator(self):
         steps_for_test = self.data.testing_data.n//self.data.testing_data.batch_size
 
+        self.data.testing_data.reset() # Reset in order to get the right labeling
         self.predictions = self.model.predict_generator(self.data.testing_data,
                                                         steps=steps_for_test,
                                                         use_multiprocessing=True,
                                                         verbose=1)
 
-        """
-        self.data.testing_data.reset() # Reset in order to get the right labeling
         predictions_indices = numpy.argmax(self.predictions, axis=1)
 
         labels = (self.data.training_data.class_indices)
@@ -88,7 +84,6 @@ class ConvNet:
         filenames = self.data.testing_data.filenames
         results = pandas.DataFrame({"Filename:":filenames, "Predictions":final_predictions})
         results.to_csv("results.csv", index=False)
-        """
 
     
     def predict(self):
