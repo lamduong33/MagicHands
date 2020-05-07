@@ -1,6 +1,7 @@
 import keras
 import numpy
 import pandas
+import statistics
 
 class ConvNet:
     """ The convolutional neural net model """
@@ -17,29 +18,31 @@ class ConvNet:
 
         # First layer of the model
         # 64 filters, of size 140x140, using relu activation with the given input size and 3 colors RGB
-        self.model.add(keras.layers.Conv2D(64, kernel_size=10, strides=1,
+        self.model.add(keras.layers.Conv2D(64, kernel_size=10, strides=1, padding="same",
             activation="relu", input_shape=(self.data.image_height,self.data.image_width,3)))
     
     def build(self):
         """ Add final layers, compile, and train the model """
 
-        # ADJUST STRIDES OR PADDING
-
-        self.model.add(keras.layers.Conv2D(64, kernel_size=[5, 5], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[5, 5]))
+        # Pooling layer after convolutional layer of 3, 3
+        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
     
-        self.model.add(keras.layers.Conv2D(64, kernel_size=[5, 5], padding='same', activation='relu'))
-        self.model.add(keras.layers.Conv2D(128, kernel_size=[5, 5], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[5, 5]))
+        # Two convolutional layers followed by a pooling layer
+        self.model.add(keras.layers.Conv2D(64, kernel_size=[3, 3], padding='same', activation='relu'))
+        self.model.add(keras.layers.Conv2D(128, kernel_size=[3, 3], padding='same', activation='relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
     
-        self.model.add(keras.layers.Conv2D(256, kernel_size=[5, 5], padding='same', activation='relu'))
-        self.model.add(keras.layers.Conv2D(512, kernel_size=[5, 5], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[5, 5]))
+        # Two convolutional layers followed by a pooling layer
+        self.model.add(keras.layers.Conv2D(256, kernel_size=[3, 3], padding='same', activation='relu'))
+        self.model.add(keras.layers.Conv2D(512, kernel_size=[3, 3], padding='same', activation='relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
 
+        # Flatten layer and a Dropout layer to reduce overfitting
         self.model.add(keras.layers.Flatten())
         self.model.add(keras.layers.Dropout(0.5))
-        self.model.add(keras.layers.Dense(29, activation='softmax'))
 
+        # Fully connected output layer of 29, with 29 images
+        self.model.add(keras.layers.Dense(29, activation='softmax'))
 
         print("CURRENT MODEL: ")
         print(self.model.summary())
@@ -82,6 +85,41 @@ class ConvNet:
         labels = dict((value, key) for key,value in labels.items())
         final_predictions = [labels[k] for k in predictions_indices]
 
-        filenames = self.data.testing_data.filenames
-        results = pandas.DataFrame({"Filename:":filenames, "Predictions":final_predictions})
+
+        file_names = self.data.testing_data.filenames
+        results = pandas.DataFrame({"Filename:":file_names, "Predictions":final_predictions})
         results.to_csv("predictions.csv", index=False)
+
+        # Create map
+        accuracy_map = dict()
+        for each_letter in self.data.classes:
+            accuracy_map.update({each_letter:list()})
+
+        # Add score to map
+        index = 0
+        for each_file in file_names:
+            file_name = each_file[12]
+            if (file_name is 'd'):
+                file_name = "del"
+            elif (file_name is 'n'):
+                file_name = "nothing"
+            elif (file_name is 's'):
+                file_name = "space"
+            if (file_name == results.Predictions[index]):
+                accuracy_map.get(file_name).append(1)
+            else:
+                accuracy_map.get(file_name).append(0)
+            index += 1
+        
+        # Find accuracy
+        total = 0.0
+        count = 0
+        for each_letter in accuracy_map:
+            if (len(accuracy_map.get(each_letter)) != 0):
+                accuracy = statistics.mean(accuracy_map.get(each_letter)) * 100
+                print(f"{each_letter}: {int(accuracy)}%")
+                count += 1
+                total += accuracy
+        print(f"Average accuracy: {int(total/count)}%")
+            
+        

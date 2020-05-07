@@ -29,11 +29,12 @@ class DataSet:
         self.validation_data = self.transformed_data_generator.flow_from_directory(self.train_data_dir,
             target_size=(self.image_height, self.image_width), batch_size=64, shuffle=True,
             classes=self.classes, class_mode="categorical", color_mode="rgb", seed=42, subset="validation")
-        self.testing_data = self.transformed_data_generator.flow_from_directory(self.test_data_dir,
+        self.testing_data = self.regular_data_generator.flow_from_directory(self.test_data_dir,
             target_size=(self.image_height, self.image_width), shuffle=False, batch_size=1)
         print("Finished processing data")
     
     def generate_transformed_data(self):
+        """ Generate data that transforms """
         for each_class in self.classes:
             class_directory = "data/test/test_folder/"
             class_directory += each_class

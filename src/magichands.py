@@ -17,12 +17,15 @@ if GPUS:
         print(error)
    
 def main():
+    """ NOTE: Uncomment the build and train to run an existing model with load_model
+              else, build and train the model with those 2 lines and make sure to
+              uncomment the "load_model" line """
     data = dataset.DataSet("data/train", "data/test_transformed", t_batch_size=64)
     #data.generate_previews()
     cnn = convnet.ConvNet(data)
-    cnn.build()
-    cnn.train()
-    #cnn.load_model("transformed_64x64_best.h5")
+    #cnn.build()
+    #cnn.train()
+    cnn.load_model("transformed.h5")
     cnn.predict_generator()
     exit(0)
 
