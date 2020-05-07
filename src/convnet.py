@@ -4,9 +4,8 @@ import pandas
 
 class ConvNet:
     """ The convolutional neural net model """
-    def __init__(self, t_dataset, t_first_activation="relu"):
-        """ t_dataset : a DataSet object containing the training and testing data
-            t_first_activation : a string of the name of the activation method for the first layer """
+    def __init__(self, t_dataset): 
+        """ t_dataset : a DataSet object containing the training and testing data"""
         self.model = keras.models.Sequential()
         self.predictions = numpy.array([])
         self.data = t_dataset
@@ -17,7 +16,7 @@ class ConvNet:
          (200,200,3) height and width = 200, and 3 RGB values """
 
         # First layer of the model
-        # 32 filters, of size 140x140, using relu activation with the given input size and 3 colors RGB
+        # 64 filters, of size 140x140, using relu activation with the given input size and 3 colors RGB
         self.model.add(keras.layers.Conv2D(64, kernel_size=10, strides=1,
             activation="relu", input_shape=(self.data.image_height,self.data.image_width,3)))
     
@@ -26,16 +25,16 @@ class ConvNet:
 
         # ADJUST STRIDES OR PADDING
 
-        self.model.add(keras.layers.Conv2D(64, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
+        self.model.add(keras.layers.Conv2D(64, kernel_size=[5, 5], padding='same', activation='relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size=[5, 5]))
     
-        self.model.add(keras.layers.Conv2D(64, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.Conv2D(128, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
+        self.model.add(keras.layers.Conv2D(64, kernel_size=[5, 5], padding='same', activation='relu'))
+        self.model.add(keras.layers.Conv2D(128, kernel_size=[5, 5], padding='same', activation='relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size=[5, 5]))
     
-        self.model.add(keras.layers.Conv2D(256, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.Conv2D(512, kernel_size=[3, 3], padding='same', activation='relu'))
-        self.model.add(keras.layers.MaxPool2D(pool_size=[3, 3]))
+        self.model.add(keras.layers.Conv2D(256, kernel_size=[5, 5], padding='same', activation='relu'))
+        self.model.add(keras.layers.Conv2D(512, kernel_size=[5, 5], padding='same', activation='relu'))
+        self.model.add(keras.layers.MaxPool2D(pool_size=[5, 5]))
 
         self.model.add(keras.layers.Flatten())
         self.model.add(keras.layers.Dropout(0.5))
@@ -46,10 +45,11 @@ class ConvNet:
         print(self.model.summary())
     
     def load_model(self, model_name):
+        """ Load an existing model """
         self.model = keras.models.load_model(model_name)
     
     def train(self):
-
+        """ Training process. Will save at the end of training """
         steps_for_validation = self.data.validation_data.n//self.data.validation_data.batch_size
         steps_for_train = self.data.training_data.n//self.data.training_data.batch_size
 
@@ -67,6 +67,7 @@ class ConvNet:
         self.model.save("magichands_model.h5")
     
     def predict_generator(self):
+        """ Predict from the generator. Will save to a csv file """
         steps_for_test = self.data.testing_data.n//self.data.testing_data.batch_size
 
         self.data.testing_data.reset() # Reset in order to get the right labeling
@@ -83,8 +84,4 @@ class ConvNet:
 
         filenames = self.data.testing_data.filenames
         results = pandas.DataFrame({"Filename:":filenames, "Predictions":final_predictions})
-        results.to_csv("results.csv", index=False)
-
-    
-    def predict(self):
-        self.model.predict()
+        results.to_csv("predictions.csv", index=False)

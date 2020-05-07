@@ -9,7 +9,7 @@ class DataSet:
         self.classes = self.classes + ['K', 'L', 'M', 'N', "nothing", 'O', 'P', 'Q', 'R']
         self.classes = self.classes + ['S', "space", 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-        self.image_height, self.image_width = 64, 64
+        self.image_height, self.image_width = 64,64
         self.batch_size = t_batch_size
         self.test_data_dir = t_test_data_dir
         self.train_data_dir = t_train_data_dir
@@ -19,7 +19,7 @@ class DataSet:
             samplewise_std_normalization=True, validation_split=0.1)
         self.transformed_data_generator = keras.preprocessing.image.ImageDataGenerator(samplewise_center=True,
             samplewise_std_normalization=True, validation_split=0.1, rotation_range=40,
-            width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2, zoom_range=0.2,
+            width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2, zoom_range=0.5,
             horizontal_flip=True, fill_mode="nearest")
 
         # Data sets

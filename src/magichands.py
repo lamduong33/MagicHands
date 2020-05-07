@@ -18,12 +18,12 @@ if GPUS:
    
 def main():
     data = dataset.DataSet("data/train", "data/test_transformed", t_batch_size=64)
-    data.generate_previews()
-    #cnn = convnet.ConvNet(data)
-    #cnn.build()
-    #cnn.train()
-    #cnn.load_model("magichands_model.h5")
-    #cnn.predict_generator()
+    #data.generate_previews()
+    cnn = convnet.ConvNet(data)
+    cnn.build()
+    cnn.train()
+    #cnn.load_model("transformed_64x64_best.h5")
+    cnn.predict_generator()
     exit(0)
 
 main()
