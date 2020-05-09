@@ -121,5 +121,3 @@ class ConvNet:
                 count += 1
                 total += accuracy
         print(f"Average accuracy: {int(total/count)}%")
-            
-        
